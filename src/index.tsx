@@ -12,7 +12,6 @@ const authProps: AuthProviderProps = {
   scope: "openid tdp-react-auth",
 }
 
-
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
