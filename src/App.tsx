@@ -28,8 +28,6 @@ function Loading() {
 function Home() {
   const auth = useAuth();
 
-  
-
   const signout = () => {
     auth.signoutRedirect();
   }
@@ -41,6 +39,7 @@ function Home() {
           <h4 className="card-title" id="card-title">Trimble Identity Demo</h4>
           <h5 className="card-subtitle mb-2 text-muted" id="card-subtitle">Welcome</h5>
           <img src={auth.user?.profile?.picture} alt="Profile Picture" />
+
           <p className="card-text">{auth.user?.profile?.given_name} {auth.user?.profile?.family_name}</p>
           <p className="card-text">{auth.user?.profile?.email}</p>
           <button className="btn btn-primary" onClick={signout}>Sign Out</button>

@@ -39,3 +39,7 @@ todo
 ## Add authentication libraries
 
 npm install oidc-client-ts react-oidc-context
+
+## Configure Authentication
+
+<img alt="Console Credentials" src="./docs/assets/console-creds.png" width=300 />
