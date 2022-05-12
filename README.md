@@ -6,23 +6,37 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ### 🚀 Create React app
 
-Create new reat application with create-react-app
+Create new react application with create-react-app
 
 ```bash
 npx create-react-app@latest tdp-react-auth-example --template typescript
 ```
 
-Start the developement server
+Start the development server
 
 ```bash
 npm start
 ```
 
-### Create Trimble Console application
+### 👩‍🚒 Create Trimble Console application
 
 Fom the [Trimble Cloud Console](https://console.trimble.com/home/applications/list) create an application with <i>Authorization Code Grant</i> and http://localhost:3000 for both callback urls.
 
-### 🦄 Add Modus styesheet
+Navigate to the Applications list and click "ADD APPLICATION"
+
+Application Type
+
+<img alt="Create application - type" src="./docs/assets/create-app-1.png" width=500 />
+
+Application Details
+
+<img alt="Create application - details" src="./docs/assets/create-app-2.png" width=500 />
+
+Appplication Configuration
+
+<img alt="Create application - configuration" src="./docs/assets/create-app-3.png" width=500 />
+
+### 🌈 Add Modus styesheet
 
 Add the Modus css styles. We are using the most basic setup for Modus to keep things simple.
 
@@ -35,9 +49,25 @@ Import the Modus stylesheet and remove the defaults.
 ```css
 /* src/index.css */
 @import "../node_modules/@trimbleinc/modus-bootstrap/dist/modus.min.css";
+
+/* delete default styles */
+/*
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+} 
+*/
 ```
 
-### Add authentication libraries
+### 🔒 Add authentication libraries
 
 This demo uses the [oidc typescript client](https://www.npmjs.com/package/oidc-client-ts) and [React oidc context extension](https://www.npmjs.com/package/react-oidc-context) for Trimble Identity authentication. These libraries greatly simplify the process of
 
@@ -45,7 +75,7 @@ This demo uses the [oidc typescript client](https://www.npmjs.com/package/oidc-c
 npm install oidc-client-ts react-oidc-context
 ```
 
-## Configure Authentication
+## ⚙ Configure Authentication
 
 ### Trimble Console configuration
 
@@ -55,7 +85,7 @@ Capture the following fields from you Trimble Console application:
 - Domain
 - Client Id
 
-<img alt="Console Credentials" src="./docs/assets/console-creds.png" width=300 />
+<img alt="Console Credentials" src="./docs/assets/console-creds.png" width=400 />
 
 ### Configure index.tsx
 
