@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# Getting Started with Trimble Identity and React
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> 👍 with bonus [Modus](https://modus-bootstrap.trimble.com/getting-started/) styles
 
 ## Setup
 
@@ -18,33 +18,23 @@ Start the development server
 npm start
 ```
 
-### 👩‍🚒 Create Trimble Console application
+### 🔒 Add authentication libraries
 
-Fom the [Trimble Cloud Console](https://console.trimble.com/home/applications/list) create an application with <i>Authorization Code Grant</i> and http://localhost:3000 for both callback urls.
+This demo uses the [oidc typescript client](https://www.npmjs.com/package/oidc-client-ts) and [React oidc context extension](https://www.npmjs.com/package/react-oidc-context) for Trimble Identity authentication. These libraries greatly simplify the process.
 
-Navigate to the Applications list and click "ADD APPLICATION"
+```bash
+npm install oidc-client-ts react-oidc-context
+```
 
-Application Type
+### 🌈 Add Modus styles
 
-<img alt="Create application - type" src="./docs/assets/create-app-1.png" width=500 />
-
-Application Details
-
-<img alt="Create application - details" src="./docs/assets/create-app-2.png" width=500 />
-
-Appplication Configuration
-
-<img alt="Create application - configuration" src="./docs/assets/create-app-3.png" width=500 />
-
-### 🌈 Add Modus styesheet
-
-Add the Modus css styles. We are using the most basic setup for Modus to keep things simple.
+Add Modus styles. We are using a basic setup for Modus to keep things simple.
 
 ```bash
 npm install --save-dev @trimbleinc/modus-bootstrap
 ```
 
-Import the Modus stylesheet and remove the defaults.
+Replace the base styles in index.css with Modus
 
 ```css
 /* src/index.css */
@@ -67,19 +57,41 @@ code {
 */
 ```
 
-### 🔒 Add authentication libraries
+## <img alt="Globe" src="./docs/assets/trimble-globe.png" width=24 /> Trimble Console Setup
 
-This demo uses the [oidc typescript client](https://www.npmjs.com/package/oidc-client-ts) and [React oidc context extension](https://www.npmjs.com/package/react-oidc-context) for Trimble Identity authentication. These libraries greatly simplify the process of
+Log into the [Trimble Cloud Console](https://console.trimble.com/home)
 
-```bash
-npm install oidc-client-ts react-oidc-context
-```
+### ➕ Create Trimble Console Application
 
-## ⚙ Configure Authentication
+Navigate to the Applications list and select:
 
-### Trimble Console configuration
+![Add Application](./docs/assets/add-application.png "Add Application")
 
-Capture the following fields from you Trimble Console application:
+Provide the following information at the prompts:
+
+| **_Application_** |             |
+| ----------------- | :---------- |
+| Application Type  | Application |
+
+| **_Details_**           |                         |
+| ----------------------- | :---------------------- |
+| Application Environment | Pre Prod                |
+| Name                    | _your application name_ |
+| Display Name            | _your display name_     |
+| Description             | _your description_      |
+
+| **_Configuration_**      |                       |
+| ------------------------ | :-------------------- |
+| Authorization Code Grant | ✅                    |
+| Client Credentials       | ⬛                    |
+| Use Refresh Tokens       | ✅                    |
+| Token Exchange           | ⬛                    |
+| Allowed Callback URLs    | http://localhost:3000 |
+| Allowed Logout URLs      | http://localhost:3000 |
+
+### 📝 Note the application credentials
+
+In the application list select the **View Credentials** button and capture the following fields for your new application:
 
 - Name
 - Domain
@@ -87,9 +99,19 @@ Capture the following fields from you Trimble Console application:
 
 <img alt="Console Credentials" src="./docs/assets/console-creds.png" width=400 />
 
-### Configure index.tsx
+## Configure Application Authentication
 
-Import the AuthProvider
+Implementing the authentication provider and context is straight forward. Configure the `AuthProvider` and wrap the root `<App />` component then access the authentication context with the `useAuth()` hook in any children.
+
+### 👮‍♂️ Configure the AuthProvider
+
+The `AuthProvider` wraps the React `<App />` object to provide an authentication context to all child components.
+
+In the `index.tsx` file we:
+
+- Import the `AuthProvider`
+- Configure `AuthProviderProps`
+- Wrap the `<App />` component
 
 ```tsx
 // src/index.tsx
@@ -115,4 +137,137 @@ root.render(
 );
 ```
 
-Create a
+### 🔑 Implement Login / Logout
+
+We are now ready to implement _sign in_ and _sign out_ in the main `<App />` component.
+
+First, import useAuth hook from the react-oidc-context library to access the authentication state and methods. Next we implement the the UI with a nested ternary 😱 and separate components for each of the 3 possibly states.
+
+```tsx
+// src/app.tsx
+import { useAuth } from "react-oidc-context";
+
+export default function App() {
+  const auth = useAuth();
+
+  return (
+    <div className="App">
+      {auth.isLoading ? (
+        <Loading />
+      ) : auth.isAuthenticated ? (
+        <Home />
+      ) : (
+        <Login />
+      )}
+    </div>
+  );
+}
+```
+
+Each of the above components in implemented is follows:
+
+`<Loading />`
+
+```tsx
+// src/app.tsx
+function Loading() {
+  return (
+    <div className="card border-dark shadow">
+      <div className="card-body">
+        <div className="text-center text-primary">
+          <div className="spinner-border"></div>
+          <div className="h1 text-primary mt-3">Loading...</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+`<Home />`
+
+```tsx
+function Home() {
+  const auth = useAuth();
+
+  const signOut = () => {
+    auth.signoutRedirect();
+  };
+
+  const epochToLocal = (epoch: number) => {
+    const d = new Date(epoch * 1000);
+    return d.toLocaleString();
+  };
+
+  return (
+    <>
+      <div className="card border-dark shadow mb-2">
+        <div className="card-body">
+          <h4 className="card-title" id="card-title">
+            Trimble Identity Demo
+          </h4>
+          <h5 className="card-subtitle mb-2 text-muted" id="card-subtitle">
+            Welcome
+          </h5>
+          <img src={auth.user?.profile?.picture} alt="Profile Picture" />
+
+          <p className="card-text">
+            {auth.user?.profile?.given_name} {auth.user?.profile?.family_name}
+          </p>
+          <p className="card-text">
+            {auth.user?.profile?.email}{" "}
+            {auth.user?.profile.email_verified ? "(Verified)" : ""}
+          </p>
+          <p className="card-text">
+            Token Expires:{" "}
+            {auth.user?.expires_at ? epochToLocal(auth.user?.expires_at) : ""}
+          </p>
+          <button className="btn btn-primary" onClick={signOut}>
+            Sign Out
+          </button>
+        </div>
+      </div>
+
+      <div className="card border-dark shadow mb-2">
+        <div className="card-body">
+          <h4 className="card-title" id="card-title">
+            User Profile
+          </h4>
+          <p className="card-text">{JSON.stringify(auth.user?.profile)}</p>
+        </div>
+      </div>
+    </>
+  );
+}
+```
+
+`<Login />`
+
+```tsx
+// src/app.tsx
+function Login() {
+  const auth = useAuth();
+
+  const signIn = () => {
+    console.log("Login");
+    auth.signinRedirect();
+  };
+
+  return (
+    <div className="card border-dark shadow">
+      <div className="card-body">
+        <h4 className="card-title" id="card-title">
+          Trimble Identity Demo
+        </h4>
+        {/* Code removed for brevity */}
+        <h5 className="card-subtitle mb-2 text-muted" id="card-subtitle">
+          Sign In
+        </h5>
+        <button className="btn btn-primary" onClick={signIn}>
+          Sign In
+        </button>
+      </div>
+    </div>
+  );
+}
+```

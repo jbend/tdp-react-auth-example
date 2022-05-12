@@ -28,8 +28,13 @@ function Loading() {
 function Home() {
   const auth = useAuth();
 
-  const signout = () => {
+  const signOut = () => {
     auth.signoutRedirect();
+  }
+
+  const epochToLocal = (epoch: number) => {
+    const d = new Date(epoch * 1000);
+    return d.toLocaleString();
   }
 
   return (
@@ -41,16 +46,16 @@ function Home() {
           <img src={auth.user?.profile?.picture} alt="Profile Picture" />
 
           <p className="card-text">{auth.user?.profile?.given_name} {auth.user?.profile?.family_name}</p>
-          <p className="card-text">{auth.user?.profile?.email}</p>
-          <button className="btn btn-primary" onClick={signout}>Sign Out</button>
+          <p className="card-text">{auth.user?.profile?.email} {auth.user?.profile.email_verified ? "(Verified)" : ""}</p>
+          <p className="card-text">Token Expires: {auth.user?.expires_at ? epochToLocal(auth.user?.expires_at) : ''}</p>
+          <button className="btn btn-primary" onClick={signOut}>Sign Out</button>
         </div>
       </div>      
 
       <div className="card border-dark shadow mb-2">
         <div className="card-body">
           <h4 className="card-title" id="card-title">User Profile</h4>
-          <p className="card-text">{JSON.stringify(auth.user?.profile)}
-          </p>
+          <p className="card-text">{JSON.stringify(auth.user?.profile)}</p>
         </div>
       </div>      
 
@@ -61,7 +66,7 @@ function Home() {
 function Login() {
   const auth = useAuth();
 
-  const signin = () => {
+  const signIn = () => {
     console.log("Login");
     auth.signinRedirect();
   }
@@ -72,7 +77,7 @@ function Login() {
         <h4 className="card-title" id="card-title">Trimble Identity Demo</h4>
         <h5 className="card-subtitle mb-2 text-muted" id="card-subtitle">Sign In</h5>
         <p className="card-text">Click the sign in button to login using Trimble Identity</p>
-        <button className="btn btn-primary" onClick={signin}>Sign In</button>
+        <button className="btn btn-primary" onClick={signIn}>Sign In</button>
       </div>
     </div>      
   )
