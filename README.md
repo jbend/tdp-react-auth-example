@@ -187,6 +187,7 @@ function Loading() {
 `<Home />`
 
 ```tsx
+// src/app.tsx
 function Home() {
   const auth = useAuth();
 
