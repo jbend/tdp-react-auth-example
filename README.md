@@ -227,15 +227,6 @@ function Home() {
           </button>
         </div>
       </div>
-
-      <div className="card border-dark shadow mb-2">
-        <div className="card-body">
-          <h4 className="card-title" id="card-title">
-            User Profile
-          </h4>
-          <p className="card-text">{JSON.stringify(auth.user?.profile)}</p>
-        </div>
-      </div>
     </>
   );
 }
@@ -259,10 +250,12 @@ function Login() {
         <h4 className="card-title" id="card-title">
           Trimble Identity Demo
         </h4>
-        {/* Code removed for brevity */}
         <h5 className="card-subtitle mb-2 text-muted" id="card-subtitle">
           Sign In
         </h5>
+        <p className="card-text">
+          Click the sign in button to login using Trimble Identity
+        </p>
         <button className="btn btn-primary" onClick={signIn}>
           Sign In
         </button>

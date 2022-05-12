@@ -51,14 +51,6 @@ function Home() {
           <button className="btn btn-primary" onClick={signOut}>Sign Out</button>
         </div>
       </div>      
-
-      <div className="card border-dark shadow mb-2">
-        <div className="card-body">
-          <h4 className="card-title" id="card-title">User Profile</h4>
-          <p className="card-text">{JSON.stringify(auth.user?.profile)}</p>
-        </div>
-      </div>      
-
     </>
   )
 }
