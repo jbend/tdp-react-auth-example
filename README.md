@@ -1,5 +1,7 @@
 # Getting Started with Trimble Identity and React
 
+This project demonstrates how to use Trimble Identity with React. It is intended to show the most basic usage of the OIDC client library with Trimble Identity and is not intended to be a production-ready application.
+
 > 👍 with bonus [Modus](https://modus-bootstrap.trimble.com/getting-started/) styles
 
 ## Setup
